@@ -3,119 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National University Exam Routine 2024</title>
+    <title>Exam Countdown v2 | National University</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --aurora-color-1: #7dd3fc; /* sky-300 */
+            --aurora-color-2: #67e8f9; /* cyan-300 */
+            --aurora-color-3: #a78bfa; /* violet-400 */
+            --aurora-color-4: #f472b6; /* pink-400 */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* Dark background */
-            color: #e2e8f0;
+            background-color: #0c0a09; /* neutral-950 */
+            color: #f2f2f2;
+            overflow-x: hidden;
+            position: relative;
         }
+
+        /* --- Animated Aurora Background --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(50vw 50vh at 20% 25%, var(--aurora-color-1), transparent),
+                radial-gradient(40vw 40vh at 80% 15%, var(--aurora-color-2), transparent),
+                radial-gradient(45vw 45vh at 10% 85%, var(--aurora-color-3), transparent),
+                radial-gradient(55vw 55vh at 75% 90%, var(--aurora-color-4), transparent);
+            filter: blur(80px) brightness(0.6);
+            opacity: 0.4;
+            z-index: -1;
+            animation: moveAurora 25s linear infinite;
+        }
+
+        @keyframes moveAurora {
+            0% { transform: rotate(0deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(1.3); }
+            100% { transform: rotate(360deg) scale(1.2); }
+        }
+
         .font-orbitron {
             font-family: 'Orbitron', sans-serif;
         }
-        .card-gradient {
-            background: linear-gradient(145deg, #2d3748, #1a202c);
+
+        /* --- Glassmorphism Effect --- */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.4); /* gray-900 with alpha */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease, border 0.3s ease;
         }
-        .countdown-item {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .table-header {
-            background-color: #2d3748;
-        }
-        .clock-container {
-            animation: pulse 2s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.02);
-            }
+        .glass-card:hover {
+            background: rgba(31, 41, 55, 0.5); /* gray-800 with alpha */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* --- Responsive Table CSS for Mobile View --- */
+        /* --- Responsive Table for Mobile --- */
         @media (max-width: 767px) {
-            .responsive-table thead {
-                /* Hide the table header on mobile */
-                display: none;
-            }
+            .responsive-table thead { display: none; }
             .responsive-table tbody, .responsive-table tr, .responsive-table td {
-                /* Make table elements stack vertically */
                 display: block;
                 width: 100%;
             }
             .responsive-table tr {
-                /* Style each row as a card */
                 margin-bottom: 1rem;
-                border-radius: 0.5rem;
+                border-radius: 0.75rem; /* rounded-xl */
                 overflow: hidden;
-                border: 1px solid #2d3748;
-                background-color: #2d3748;
             }
             .responsive-table td {
-                /* Align text and create space for the data label */
                 text-align: right;
                 padding-left: 50%;
                 position: relative;
                 padding-top: 0.75rem;
                 padding-bottom: 0.75rem;
                 padding-right: 1rem;
-                border-bottom: 1px solid #1a202c;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-            .responsive-table td:last-child {
+            .responsive-table tr:last-child td:last-child {
                 border-bottom: 0;
             }
             .responsive-table td::before {
-                /* Add the data label as a pseudo-element */
                 content: attr(data-label);
                 position: absolute;
                 left: 0;
                 width: 45%;
                 padding-left: 1rem;
-                font-weight: 600;
+                font-weight: 500;
                 text-align: left;
                 white-space: nowrap;
-                color: #a0aec0; /* Lighter text for the label */
+                color: #d1d5db; /* gray-300 */
             }
         }
     </style>
 </head>
-<body class="text-white">
+<body>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 relative z-10">
         <!-- Header Section -->
-        <header class="text-center mb-8 md:mb-12">
-            <img src="https://www.anandamohangovtcollege.edu.bd/public/uploads/logo/_%E0%A6%AE%E0%A7%8B%E0%A6%B9%E0%A6%A8_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B-1725471905.png" alt="College Logo" class="mx-auto mb-4 h-20 w-20" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1a202c/ffffff?text=Logo';">
-            <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold font-orbitron tracking-wider">National University</h1>
-            <h2 class="text-lg sm:text-xl md:text-2xl font-semibold mt-2">Honours 1st Year Exam Routine - 2024</h2>
-            <p class="text-base sm:text-lg md:text-xl text-cyan-400">Subject: Mathematics</p>
-            <div id="clock" class="text-xl sm:text-2xl md:text-3xl font-orbitron mt-6 p-3 sm:p-4 bg-gray-900 rounded-lg shadow-lg inline-block clock-container"></div>
+        <header class="text-center mb-10 md:mb-16">
+            <img src="https://www.anandamohangovtcollege.edu.bd/public/uploads/logo/_%E0%A6%AE%E0%A7%8B%E0%A6%B9%E0%A6%A8_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B-1725471905.png" alt="College Logo" class="mx-auto mb-4 h-24 w-24 rounded-full p-2 bg-white/10" onerror="this.onerror=null;this.src='https://placehold.co/96x96/ffffff/1a202c?text=Logo';">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wider">National University</h1>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-medium mt-2 text-gray-300">Honours 1st Year Exam Routine - 2024</h2>
+            <p class="text-base sm:text-lg md:text-xl text-cyan-300 mt-1">Subject: Mathematics</p>
+            <div id="clock" class="text-xl sm:text-2xl md:text-3xl font-orbitron mt-8 p-4 glass-card rounded-xl shadow-lg inline-block"></div>
         </header>
 
         <!-- Countdown Timers Section -->
-        <main id="countdown-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+        <main id="countdown-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
             <!-- Countdown cards will be injected here by JavaScript -->
         </main>
 
         <!-- Full Routine Table Section -->
-        <section class="bg-gray-800/50 rounded-lg shadow-2xl overflow-hidden">
-            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-center py-4 sm:py-6 table-header">Full Exam Schedule</h3>
+        <section class="glass-card rounded-xl shadow-2xl overflow-hidden">
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-center py-5 sm:py-6 bg-black/20">Full Exam Schedule</h3>
             <div class="overflow-x-auto p-4 md:p-0">
                 <table class="w-full text-center responsive-table">
-                    <thead>
+                    <thead class="bg-white/5">
                         <tr>
-                            <th class="p-4 font-semibold">Code</th>
-                            <th class="p-4 font-semibold">Paper Title</th>
-                            <th class="p-4 font-semibold">Date</th>
-                            <th class="p-4 font-semibold">Day</th>
-                            <th class="p-4 font-semibold">Time</th>
+                            <th class="p-4 font-semibold text-gray-300">Code</th>
+                            <th class="p-4 font-semibold text-gray-300">Paper Title</th>
+                            <th class="p-4 font-semibold text-gray-300">Date</th>
+                            <th class="p-4 font-semibold text-gray-300">Day</th>
+                            <th class="p-4 font-semibold text-gray-300">Time</th>
                         </tr>
                     </thead>
                     <tbody id="routine-table-body">
@@ -127,18 +142,17 @@
 
         <!-- Footer Section -->
         <footer class="text-center mt-12 py-4">
-            <p class="text-gray-500 text-sm">
-                &copy; <span id="year"></span> MD Mahfiz Kaif. All Rights Reserved. | 
-                <span class="inline-flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                    Visitors: <span id="visitor-count">Loading...</span>
-                </span>
-            </p>
+            <div class="text-gray-400 text-sm">
+                <p>&copy; <span id="year"></span> MD Mahfiz Kaif. All Rights Reserved.</p>
+                <p class="inline-flex items-center mt-2">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Visitors: <span id="visitor-count" class="font-semibold ml-1">Loading...</span>
+                </p>
+            </div>
         </footer>
     </div>
 
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -161,28 +175,25 @@
         const yearElement = document.getElementById('year');
         const visitorCountElement = document.getElementById('visitor-count');
 
-        // --- Firebase Setup ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'exam-countdown-default';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'exam-countdown-v2-default';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        // --- End Firebase Setup ---
 
         function updateClock() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const dateString = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            clockElement.innerHTML = `${dateString}<br>${timeString}`;
+            const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
+            clockElement.innerHTML = `${dateString} &bull; ${timeString}`;
         }
 
         function createCountdownCard(exam, index) {
             const card = document.createElement('div');
-            card.className = 'card-gradient p-6 rounded-xl shadow-lg flex flex-col items-center text-center countdown-item';
-            card.style.animationDelay = `${index * 100}ms`;
+            card.className = 'glass-card p-6 rounded-xl shadow-lg flex flex-col items-center text-center';
             
             const title = document.createElement('h4');
-            title.className = 'text-lg sm:text-xl font-bold mb-1 text-cyan-300';
+            title.className = 'text-lg sm:text-xl font-bold mb-1 text-white';
             title.textContent = exam.title;
             card.appendChild(title);
 
@@ -193,96 +204,71 @@
 
             const countdownDiv = document.createElement('div');
             countdownDiv.id = `countdown-${index}`;
-            countdownDiv.className = 'flex justify-center space-x-3 sm:space-x-4 text-center';
+            countdownDiv.className = 'flex justify-center space-x-3 sm:space-x-4 text-center mt-2';
             countdownDiv.innerHTML = `
-                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="days-${index}">0</span><p class="text-xs">Days</p></div>
-                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="hours-${index}">0</span><p class="text-xs">Hours</p></div>
-                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="minutes-${index}">0</span><p class="text-xs">Mins</p></div>
-                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="seconds-${index}">0</span><p class="text-xs">Secs</p></div>
+                <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-sky-300" id="days-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">DAYS</p></div>
+                <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-cyan-300" id="hours-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">HRS</p></div>
+                <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-violet-300" id="minutes-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">MINS</p></div>
+                <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-pink-300" id="seconds-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">SECS</p></div>
             `;
             card.appendChild(countdownDiv);
             
             countdownContainer.appendChild(card);
         }
 
-        function createTableRow(exam, index) {
+        function createTableRow(exam) {
             const row = document.createElement('tr');
-            // On desktop, alternate row colors. Mobile will have its own background.
-            row.className = 'md:odd:bg-gray-900/50 md:even:bg-gray-800/50';
+            row.className = 'md:hover:bg-white/5 transition-colors duration-200';
             
             const examDate = new Date(exam.date);
             const formattedDate = examDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const day = examDate.toLocaleDateString('en-US', { weekday: 'long' });
             const time = examDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-            // Add data-label attributes for the mobile view
             row.innerHTML = `
-                <td data-label="Code">${exam.code}</td>
-                <td data-label="Paper Title">${exam.title}</td>
-                <td data-label="Date">${formattedDate}</td>
-                <td data-label="Day">${day}</td>
-                <td data-label="Time">${time}</td>
+                <td data-label="Code" class="p-3 font-mono">${exam.code}</td>
+                <td data-label="Paper Title" class="p-3 text-left md:text-center">${exam.title}</td>
+                <td data-label="Date" class="p-3">${formattedDate}</td>
+                <td data-label="Day" class="p-3">${day}</td>
+                <td data-label="Time" class="p-3">${time}</td>
             `;
             routineTableBody.appendChild(row);
         }
 
         function updateCountdowns() {
             const now = new Date().getTime();
-
             exams.forEach((exam, index) => {
                 const examTime = new Date(exam.date).getTime();
                 const distance = examTime - now;
 
-                const daysEl = document.getElementById(`days-${index}`);
-                const hoursEl = document.getElementById(`hours-${index}`);
-                const minutesEl = document.getElementById(`minutes-${index}`);
-                const secondsEl = document.getElementById(`seconds-${index}`);
                 const countdownEl = document.getElementById(`countdown-${index}`);
-
                 if (distance < 0) {
-                    if(countdownEl.innerHTML.includes('Finished')) return;
-                    countdownEl.innerHTML = '<p class="text-xl sm:text-2xl font-bold text-red-500">Exam Finished</p>';
+                    if (!countdownEl.innerHTML.includes('Finished')) {
+                        countdownEl.innerHTML = '<p class="text-xl sm:text-2xl font-bold text-red-400">Exam Finished</p>';
+                    }
                     return;
                 }
 
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                daysEl.textContent = String(days).padStart(2, '0');
-                hoursEl.textContent = String(hours).padStart(2, '0');
-                minutesEl.textContent = String(minutes).padStart(2, '0');
-                secondsEl.textContent = String(seconds).padStart(2, '0');
+                document.getElementById(`days-${index}`).textContent = String(Math.floor(distance / 86400000)).padStart(2, '0');
+                document.getElementById(`hours-${index}`).textContent = String(Math.floor((distance % 86400000) / 3600000)).padStart(2, '0');
+                document.getElementById(`minutes-${index}`).textContent = String(Math.floor((distance % 3600000) / 60000)).padStart(2, '0');
+                document.getElementById(`seconds-${index}`).textContent = String(Math.floor((distance % 60000) / 1000)).padStart(2, '0');
             });
         }
 
         async function manageVisitorCount() {
             try {
                 const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (authToken) {
-                    await signInWithCustomToken(auth, authToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                if (authToken) { await signInWithCustomToken(auth, authToken); } 
+                else { await signInAnonymously(auth); }
 
                 const counterRef = doc(db, `artifacts/${appId}/public/data/site_stats/visits`);
-
                 const newCount = await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
-                    
-                    if (!counterDoc.exists()) {
-                        if (!sessionStorage.getItem('visit_counted')) {
-                            transaction.set(counterRef, { count: 1 });
-                            return 1;
-                        }
-                        return 0;
-                    }
-
-                    let currentCount = counterDoc.data().count;
+                    let currentCount = counterDoc.exists() ? counterDoc.data().count : 0;
                     if (!sessionStorage.getItem('visit_counted')) {
                         currentCount++;
-                        transaction.update(counterRef, { count: currentCount });
+                        transaction.set(counterRef, { count: currentCount }, { merge: true });
                     }
                     return currentCount;
                 });
@@ -290,9 +276,7 @@
                 if (!sessionStorage.getItem('visit_counted')) {
                     sessionStorage.setItem('visit_counted', 'true');
                 }
-
-                visitorCountElement.textContent = newCount;
-
+                visitorCountElement.textContent = newCount.toLocaleString();
             } catch (error) {
                 console.error("Error managing visitor count:", error);
                 visitorCountElement.textContent = "N/A";
@@ -303,7 +287,7 @@
             yearElement.textContent = new Date().getFullYear();
             exams.forEach((exam, index) => {
                 createCountdownCard(exam, index);
-                createTableRow(exam, index);
+                createTableRow(exam);
             });
             updateClock();
             updateCountdowns();
