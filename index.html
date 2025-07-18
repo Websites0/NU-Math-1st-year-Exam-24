@@ -86,11 +86,22 @@
 
         <!-- Footer Section -->
         <footer class="text-center mt-12 py-4">
-            <p class="text-gray-500 text-sm">&copy; <span id="year"></span> MD Mahfiz Kaif. All Rights Reserved.</p>
+            <p class="text-gray-500 text-sm">
+                &copy; <span id="year"></span> MD Mahfiz Kaif. All Rights Reserved. | 
+                <span class="inline-flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Visitors: <span id="visitor-count">Loading...</span>
+                </span>
+            </p>
         </footer>
     </div>
 
-    <script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const exams = [
             { code: "211501", title: "History Of Bangladesh", date: "2025-08-24T13:30:00" },
             { code: "213701", title: "Fundamentals of Mathematics", date: "2025-08-28T13:30:00" },
@@ -107,6 +118,15 @@
         const routineTableBody = document.getElementById('routine-table-body');
         const clockElement = document.getElementById('clock');
         const yearElement = document.getElementById('year');
+        const visitorCountElement = document.getElementById('visitor-count');
+
+        // --- Firebase Setup ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'exam-countdown-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        // --- End Firebase Setup ---
 
         function updateClock() {
             const now = new Date();
@@ -177,6 +197,7 @@
                 const countdownEl = document.getElementById(`countdown-${index}`);
 
                 if (distance < 0) {
+                    if(countdownEl.innerHTML.includes('Finished')) return;
                     countdownEl.innerHTML = '<p class="text-2xl font-bold text-red-500">Exam Finished</p>';
                     return;
                 }
@@ -193,6 +214,56 @@
             });
         }
 
+        async function manageVisitorCount() {
+            try {
+                // 1. Authenticate the user to allow database interaction.
+                const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (authToken) {
+                    await signInWithCustomToken(auth, authToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // 2. Define the path to the counter document in Firestore.
+                const counterRef = doc(db, `artifacts/${appId}/public/data/site_stats/visits`);
+
+                // 3. Use a transaction to safely read and update the counter.
+                const newCount = await runTransaction(db, async (transaction) => {
+                    const counterDoc = await transaction.get(counterRef);
+                    
+                    if (!counterDoc.exists()) {
+                        // If the document doesn't exist and it's a new session, create it with count 1.
+                        if (!sessionStorage.getItem('visit_counted')) {
+                            transaction.set(counterRef, { count: 1 });
+                            return 1;
+                        }
+                        // If session exists but doc doesn't (rare), just return 0.
+                        return 0;
+                    }
+
+                    let currentCount = counterDoc.data().count;
+                    // If it's a new session for this user, increment the count.
+                    if (!sessionStorage.getItem('visit_counted')) {
+                        currentCount++;
+                        transaction.update(counterRef, { count: currentCount });
+                    }
+                    return currentCount;
+                });
+
+                // 4. After a successful update, mark this session as counted.
+                if (!sessionStorage.getItem('visit_counted')) {
+                    sessionStorage.setItem('visit_counted', 'true');
+                }
+
+                // 5. Display the final count.
+                visitorCountElement.textContent = newCount;
+
+            } catch (error) {
+                console.error("Error managing visitor count:", error);
+                visitorCountElement.textContent = "N/A";
+            }
+        }
+
         // Initialize the page
         function init() {
             yearElement.textContent = new Date().getFullYear(); // Set current year for copyright
@@ -204,6 +275,9 @@
             updateCountdowns();
             setInterval(updateClock, 1000);
             setInterval(updateCountdowns, 1000);
+            
+            // Add the new function call for the visitor counter
+            manageVisitorCount();
         }
 
         window.onload = init;
