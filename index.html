@@ -10,6 +10,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #1a202c; /* Dark background */
+            color: #e2e8f0;
         }
         .font-orbitron {
             font-family: 'Orbitron', sans-serif;
@@ -27,12 +28,6 @@
         .table-header {
             background-color: #2d3748;
         }
-        .table-row-dark {
-            background-color: #1a202c;
-        }
-        .table-row-light {
-            background-color: #2d3748;
-        }
         .clock-container {
             animation: pulse 2s infinite ease-in-out;
         }
@@ -44,18 +39,64 @@
                 transform: scale(1.02);
             }
         }
+
+        /* --- Responsive Table CSS for Mobile View --- */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                /* Hide the table header on mobile */
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                /* Make table elements stack vertically */
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                /* Style each row as a card */
+                margin-bottom: 1rem;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                border: 1px solid #2d3748;
+                background-color: #2d3748;
+            }
+            .responsive-table td {
+                /* Align text and create space for the data label */
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                padding-top: 0.75rem;
+                padding-bottom: 0.75rem;
+                padding-right: 1rem;
+                border-bottom: 1px solid #1a202c;
+            }
+            .responsive-table td:last-child {
+                border-bottom: 0;
+            }
+            .responsive-table td::before {
+                /* Add the data label as a pseudo-element */
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-left: 1rem;
+                font-weight: 600;
+                text-align: left;
+                white-space: nowrap;
+                color: #a0aec0; /* Lighter text for the label */
+            }
+        }
     </style>
 </head>
 <body class="text-white">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
         <!-- Header Section -->
         <header class="text-center mb-8 md:mb-12">
             <img src="https://www.anandamohangovtcollege.edu.bd/public/uploads/logo/_%E0%A6%AE%E0%A7%8B%E0%A6%B9%E0%A6%A8_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B-1725471905.png" alt="College Logo" class="mx-auto mb-4 h-20 w-20" onerror="this.onerror=null;this.src='https://placehold.co/80x80/1a202c/ffffff?text=Logo';">
-            <h1 class="text-3xl md:text-5xl font-bold font-orbitron tracking-wider">National University</h1>
-            <h2 class="text-xl md:text-2xl font-semibold mt-2">Honours 1st Year Exam Routine - 2024</h2>
-            <p class="text-lg md:text-xl text-cyan-400">Subject: Mathematics</p>
-            <div id="clock" class="text-2xl md:text-3xl font-orbitron mt-6 p-4 bg-gray-900 rounded-lg shadow-lg inline-block clock-container"></div>
+            <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold font-orbitron tracking-wider">National University</h1>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-semibold mt-2">Honours 1st Year Exam Routine - 2024</h2>
+            <p class="text-base sm:text-lg md:text-xl text-cyan-400">Subject: Mathematics</p>
+            <div id="clock" class="text-xl sm:text-2xl md:text-3xl font-orbitron mt-6 p-3 sm:p-4 bg-gray-900 rounded-lg shadow-lg inline-block clock-container"></div>
         </header>
 
         <!-- Countdown Timers Section -->
@@ -64,11 +105,11 @@
         </main>
 
         <!-- Full Routine Table Section -->
-        <section class="bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
-            <h3 class="text-2xl md:text-3xl font-bold text-center py-6 table-header">Full Exam Schedule</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-center">
-                    <thead class="table-header">
+        <section class="bg-gray-800/50 rounded-lg shadow-2xl overflow-hidden">
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-center py-4 sm:py-6 table-header">Full Exam Schedule</h3>
+            <div class="overflow-x-auto p-4 md:p-0">
+                <table class="w-full text-center responsive-table">
+                    <thead>
                         <tr>
                             <th class="p-4 font-semibold">Code</th>
                             <th class="p-4 font-semibold">Paper Title</th>
@@ -141,7 +182,7 @@
             card.style.animationDelay = `${index * 100}ms`;
             
             const title = document.createElement('h4');
-            title.className = 'text-xl font-bold mb-1 text-cyan-300';
+            title.className = 'text-lg sm:text-xl font-bold mb-1 text-cyan-300';
             title.textContent = exam.title;
             card.appendChild(title);
 
@@ -152,12 +193,12 @@
 
             const countdownDiv = document.createElement('div');
             countdownDiv.id = `countdown-${index}`;
-            countdownDiv.className = 'flex justify-center space-x-2 md:space-x-4 text-center';
+            countdownDiv.className = 'flex justify-center space-x-3 sm:space-x-4 text-center';
             countdownDiv.innerHTML = `
-                <div><span class="text-3xl md:text-4xl font-orbitron font-bold" id="days-${index}">0</span><p class="text-xs">Days</p></div>
-                <div><span class="text-3xl md:text-4xl font-orbitron font-bold" id="hours-${index}">0</span><p class="text-xs">Hours</p></div>
-                <div><span class="text-3xl md:text-4xl font-orbitron font-bold" id="minutes-${index}">0</span><p class="text-xs">Mins</p></div>
-                <div><span class="text-3xl md:text-4xl font-orbitron font-bold" id="seconds-${index}">0</span><p class="text-xs">Secs</p></div>
+                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="days-${index}">0</span><p class="text-xs">Days</p></div>
+                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="hours-${index}">0</span><p class="text-xs">Hours</p></div>
+                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="minutes-${index}">0</span><p class="text-xs">Mins</p></div>
+                <div><span class="text-2xl sm:text-3xl md:text-4xl font-orbitron font-bold" id="seconds-${index}">0</span><p class="text-xs">Secs</p></div>
             `;
             card.appendChild(countdownDiv);
             
@@ -166,19 +207,21 @@
 
         function createTableRow(exam, index) {
             const row = document.createElement('tr');
-            row.className = index % 2 === 0 ? 'table-row-light' : 'table-row-dark';
+            // On desktop, alternate row colors. Mobile will have its own background.
+            row.className = 'md:odd:bg-gray-900/50 md:even:bg-gray-800/50';
             
             const examDate = new Date(exam.date);
             const formattedDate = examDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const day = examDate.toLocaleDateString('en-US', { weekday: 'long' });
             const time = examDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
+            // Add data-label attributes for the mobile view
             row.innerHTML = `
-                <td class="p-3">${exam.code}</td>
-                <td class="p-3">${exam.title}</td>
-                <td class="p-3">${formattedDate}</td>
-                <td class="p-3">${day}</td>
-                <td class="p-3">${time}</td>
+                <td data-label="Code">${exam.code}</td>
+                <td data-label="Paper Title">${exam.title}</td>
+                <td data-label="Date">${formattedDate}</td>
+                <td data-label="Day">${day}</td>
+                <td data-label="Time">${time}</td>
             `;
             routineTableBody.appendChild(row);
         }
@@ -198,7 +241,7 @@
 
                 if (distance < 0) {
                     if(countdownEl.innerHTML.includes('Finished')) return;
-                    countdownEl.innerHTML = '<p class="text-2xl font-bold text-red-500">Exam Finished</p>';
+                    countdownEl.innerHTML = '<p class="text-xl sm:text-2xl font-bold text-red-500">Exam Finished</p>';
                     return;
                 }
 
@@ -216,7 +259,6 @@
 
         async function manageVisitorCount() {
             try {
-                // 1. Authenticate the user to allow database interaction.
                 const authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                 if (authToken) {
                     await signInWithCustomToken(auth, authToken);
@@ -224,25 +266,20 @@
                     await signInAnonymously(auth);
                 }
 
-                // 2. Define the path to the counter document in Firestore.
                 const counterRef = doc(db, `artifacts/${appId}/public/data/site_stats/visits`);
 
-                // 3. Use a transaction to safely read and update the counter.
                 const newCount = await runTransaction(db, async (transaction) => {
                     const counterDoc = await transaction.get(counterRef);
                     
                     if (!counterDoc.exists()) {
-                        // If the document doesn't exist and it's a new session, create it with count 1.
                         if (!sessionStorage.getItem('visit_counted')) {
                             transaction.set(counterRef, { count: 1 });
                             return 1;
                         }
-                        // If session exists but doc doesn't (rare), just return 0.
                         return 0;
                     }
 
                     let currentCount = counterDoc.data().count;
-                    // If it's a new session for this user, increment the count.
                     if (!sessionStorage.getItem('visit_counted')) {
                         currentCount++;
                         transaction.update(counterRef, { count: currentCount });
@@ -250,12 +287,10 @@
                     return currentCount;
                 });
 
-                // 4. After a successful update, mark this session as counted.
                 if (!sessionStorage.getItem('visit_counted')) {
                     sessionStorage.setItem('visit_counted', 'true');
                 }
 
-                // 5. Display the final count.
                 visitorCountElement.textContent = newCount;
 
             } catch (error) {
@@ -264,9 +299,8 @@
             }
         }
 
-        // Initialize the page
         function init() {
-            yearElement.textContent = new Date().getFullYear(); // Set current year for copyright
+            yearElement.textContent = new Date().getFullYear();
             exams.forEach((exam, index) => {
                 createCountdownCard(exam, index);
                 createTableRow(exam, index);
@@ -275,8 +309,6 @@
             updateCountdowns();
             setInterval(updateClock, 1000);
             setInterval(updateCountdowns, 1000);
-            
-            // Add the new function call for the visitor counter
             manageVisitorCount();
         }
 
