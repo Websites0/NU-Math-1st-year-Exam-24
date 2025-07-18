@@ -1,170 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Exam Countdown v2 | National University</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
-  <style>
-    /* [Your full CSS here — unchanged, skipped for brevity to focus on JS fix] */
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Countdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .card-gradient-light {
+            background: linear-gradient(145deg, #e6e6e6, #ffffff);
+        }
+        .card-gradient-dark {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+        .countdown-glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #007bff;
+            }
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #007bff, 0 0 30px #007bff;
+            }
+        }
+        .dark .countdown-glow {
+             animation: dark-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes dark-glow {
+            from {
+                text-shadow: 0 0 5px #00aaff, 0 0 10px #00aaff, 0 0 15px #00aaff;
+            }
+            to {
+                text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff;
+            }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body>
-  <!-- [Your full HTML body here — unchanged, skipped for brevity to focus on JS fix] -->
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
-  <!-- Firebase SDKs (non-module style) -->
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8 animate-fade-in">
+            <div class="flex items-center space-x-4">
+                <img src="https://www.anandamohangovtcollege.edu.bd/public/uploads/logo/_%E0%A6%AE%E0%A7%8B%E0%A6%B9%E0%A6%A8_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B-1725471905.png" alt="Profile Picture" class="w-16 h-16 rounded-full border-4 border-blue-500 dark:border-blue-400 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/64x64/007bff/FFFFFF?text=AMC';">
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-bold text-blue-600 dark:text-blue-400">Honours 1st Year Exam Routine</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Subject: Mathematics</p>
+                </div>
+            </div>
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg id="theme-icon-light" class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="theme-icon-dark" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </header>
 
-  <!-- Your custom JavaScript -->
-  <script>
-    const exams = [
-      { code: "211501", title: "History Of Bangladesh", date: "2025-08-24T13:30:00" },
-      { code: "213701", title: "Fundamentals of Mathematics", date: "2025-08-28T13:30:00" },
-      { code: "213703", title: "Calculus - I", date: "2025-08-31T13:30:00" },
-      { code: "213705", title: "Linear Algebra", date: "2025-09-03T13:30:00" },
-      { code: "213707", title: "Analytic and Vector Geometry", date: "2025-09-07T13:30:00" },
-      { code: "212707", title: "Physics-I", date: "2025-09-14T13:30:00" },
-      { code: "212709", title: "Physics-II", date: "2025-09-22T13:30:00" },
-      { code: "212807", title: "Chemistry-I", date: "2025-10-12T13:30:00" },
-      { code: "213607", title: "Introduction to Statistics", date: "2025-10-13T13:30:00" }
-    ];
+        <!-- Live Clock -->
+        <div id="clock" class="text-4xl md:text-6xl font-orbitron text-center my-8 md:my-12 font-bold text-gray-800 dark:text-gray-200 animate-fade-in" style="animation-delay: 200ms;"></div>
 
-    const countdownContainer = document.getElementById('countdown-container');
-    const routineTableBody = document.getElementById('routine-table-body');
-    const clockElement = document.getElementById('clock');
-    const yearElement = document.getElementById('year');
-    const visitorCountElement = document.getElementById('visitor-count');
+        <!-- Countdown Timers -->
+        <div id="countdown-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Countdown cards will be injected here by JavaScript -->
+        </div>
 
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+        <!-- Full Routine Table -->
+        <div class="mt-16 animate-fade-in" style="animation-delay: 400ms;">
+            <h2 class="text-3xl font-bold text-center mb-8 text-blue-600 dark:text-blue-400">Full Exam Schedule</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                    <thead class="bg-blue-600 dark:bg-blue-500 text-white">
+                        <tr>
+                            <th class="py-3 px-4 text-left">Code</th>
+                            <th class="py-3 px-4 text-left">Paper Title</th>
+                            <th class="py-3 px-4 text-left">Date</th>
+                            <th class="py-3 px-4 text-left">Day</th>
+                            <th class="py-3 px-4 text-left">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="routine-body" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Routine rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+        <!-- Footer -->
+        <footer class="text-center mt-12 py-4 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-gray-600 dark:text-gray-400">&copy; 2025 MD Mahfiz Kaif. All Rights Reserved.</p>
+        </footer>
+    </div>
 
-    function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' });
-      const dateString = now.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
-      clockElement.innerHTML = `${dateString} &bull; ${timeString}`;
-    }
+    <script>
+        // --- DATA ---
+        const exams = [
+            { code: '211501', title: 'History Of Bangladesh', date: '2025-08-24T13:30:00' },
+            { code: '213701', title: 'Fundamentals of Mathematics', date: '2025-08-28T13:30:00' },
+            { code: '213703', title: 'Calculus - I', date: '2025-08-31T13:30:00' },
+            { code: '213705', title: 'Linear Algebra', date: '2025-09-03T13:30:00' },
+            { code: '213707', title: 'Analytic and Vector Geometry', date: '2025-09-07T13:30:00' },
+            { code: '212707', title: 'Physics-I', date: '2025-09-14T13:30:00' },
+            { code: '212709', title: 'Physics-II', date: '2025-09-22T13:30:00' },
+            { code: '212807', title: 'Chemistry-I', date: '2025-10-12T13:30:00' },
+            { code: '213607', title: 'Introduction to Statistics', date: '2025-10-13T13:30:00' },
+        ];
 
-    function createCountdownCard(exam, index) {
-      const card = document.createElement('div');
-      card.className = 'glass-card p-6 rounded-xl shadow-lg flex flex-col items-center text-center';
+        // --- ELEMENTS ---
+        const countdownContainer = document.getElementById('countdown-container');
+        const routineBody = document.getElementById('routine-body');
+        const clockElement = document.getElementById('clock');
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const htmlEl = document.documentElement;
 
-      const title = document.createElement('h4');
-      title.className = 'text-lg sm:text-xl font-bold mb-1 text-white';
-      title.textContent = exam.title;
-      card.appendChild(title);
+        // --- FUNCTIONS ---
 
-      const code = document.createElement('p');
-      code.className = 'text-sm font-mono mb-4 text-gray-400';
-      code.textContent = `Code: ${exam.code}`;
-      card.appendChild(code);
+        /**
+         * Calculates the time remaining until a target date.
+         * @param {string} targetDate - The target date in ISO format.
+         * @returns {object|null} - Object with days, hours, minutes, seconds, or null if past.
+         */
+        function calculateCountdown(targetDate) {
+            const now = new Date().getTime();
+            const target = new Date(targetDate).getTime();
+            const difference = target - now;
 
-      const countdownDiv = document.createElement('div');
-      countdownDiv.id = `countdown-${index}`;
-      countdownDiv.className = 'flex justify-center space-x-3 sm:space-x-4 text-center mt-2';
-      countdownDiv.innerHTML = `
-        <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-sky-300" id="days-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">DAYS</p></div>
-        <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-cyan-300" id="hours-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">HRS</p></div>
-        <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-violet-300" id="minutes-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">MINS</p></div>
-        <div><span class="text-3xl sm:text-4xl font-orbitron font-bold text-pink-300" id="seconds-${index}">0</span><p class="text-xs text-gray-400 tracking-wider">SECS</p></div>
-      `;
-      card.appendChild(countdownDiv);
-      countdownContainer.appendChild(card);
-    }
+            if (difference <= 0) {
+                return null;
+            }
 
-    function createTableRow(exam) {
-      const row = document.createElement('tr');
-      row.className = 'md:hover:bg-white/5 transition-colors duration-200';
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-      const examDate = new Date(exam.date);
-      const formattedDate = examDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const day = examDate.toLocaleDateString('en-US', { weekday: 'long' });
-      const time = examDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            return { days, hours, minutes, seconds };
+        }
+        
+        /**
+         * Formats a date for display.
+         * @param {string} dateString - The date string to format.
+         * @returns {object} - Object with formatted date, day, and time.
+         */
+        function formatDisplayDate(dateString) {
+            const dateObj = new Date(dateString);
+            const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+            const optionsDay = { weekday: 'long' };
+            const optionsTime = { hour: 'numeric', minute: 'numeric', hour12: true };
 
-      row.innerHTML = `
-        <td data-label="Code" class="p-3 font-mono">${exam.code}</td>
-        <td data-label="Paper Title" class="p-3 text-left md:text-center">${exam.title}</td>
-        <td data-label="Date" class="p-3">${formattedDate}</td>
-        <td data-label="Day" class="p-3">${day}</td>
-        <td data-label="Time" class="p-3">${time}</td>
-      `;
-      routineTableBody.appendChild(row);
-    }
-
-    function updateCountdowns() {
-      const now = new Date().getTime();
-      exams.forEach((exam, index) => {
-        const examTime = new Date(exam.date).getTime();
-        const distance = examTime - now;
-
-        const countdownEl = document.getElementById(`countdown-${index}`);
-        if (distance < 0) {
-          if (!countdownEl.innerHTML.includes('Finished')) {
-            countdownEl.innerHTML = '<p class="text-xl sm:text-2xl font-bold text-red-400">Exam Finished</p>';
-          }
-          return;
+            return {
+                date: dateObj.toLocaleDateString('en-US', optionsDate),
+                day: dateObj.toLocaleDateString('en-US', optionsDay),
+                time: dateObj.toLocaleTimeString('en-US', optionsTime)
+            };
         }
 
-        document.getElementById(`days-${index}`).textContent = String(Math.floor(distance / 86400000)).padStart(2, '0');
-        document.getElementById(`hours-${index}`).textContent = String(Math.floor((distance % 86400000) / 3600000)).padStart(2, '0');
-        document.getElementById(`minutes-${index}`).textContent = String(Math.floor((distance % 3600000) / 60000)).padStart(2, '0');
-        document.getElementById(`seconds-${index}`).textContent = String(Math.floor((distance % 60000) / 1000)).padStart(2, '0');
-      });
-    }
+        /**
+         * Creates and populates the countdown cards and routine table.
+         */
+        function populateContent() {
+            exams.forEach((exam, index) => {
+                const displayDate = formatDisplayDate(exam.date);
 
-    async function manageVisitorCount() {
-      try {
-        await auth.signInAnonymously();
-        const counterRef = db.doc("artifacts/exam-countdown-v2-default/public/data/site_stats/visits");
+                // Create Countdown Card
+                const card = document.createElement('div');
+                card.className = 'p-6 rounded-xl shadow-2xl card-gradient-light dark:card-gradient-dark transform hover:scale-105 transition-transform duration-300 animate-fade-in';
+                card.style.animationDelay = `${index * 100}ms`;
+                
+                card.innerHTML = `
+                    <h3 class="text-xl font-bold text-blue-700 dark:text-blue-300">${exam.title}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">${displayDate.date} - ${displayDate.day}</p>
+                    <div id="timer-${exam.code}" class="text-4xl font-bold text-center my-4 countdown-glow">
+                        <!-- Timer will be updated here -->
+                    </div>
+                `;
+                countdownContainer.appendChild(card);
 
-        const newCount = await db.runTransaction(async (transaction) => {
-          const counterDoc = await transaction.get(counterRef);
-          let currentCount = counterDoc.exists ? counterDoc.data().count : 0;
-          if (!sessionStorage.getItem('visit_counted')) {
-            currentCount++;
-            transaction.set(counterRef, { count: currentCount }, { merge: true });
-          }
-          return currentCount;
+                // Create Routine Table Row
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200';
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-mono">${exam.code}</td>
+                    <td class="py-3 px-4">${exam.title}</td>
+                    <td class="py-3 px-4">${displayDate.date}</td>
+                    <td class="py-3 px-4">${displayDate.day}</td>
+                    <td class="py-3 px-4">${displayDate.time}</td>
+                `;
+                routineBody.appendChild(row);
+            });
+        }
+
+        /**
+         * Updates all timers and the clock every second.
+         */
+        function updateTimers() {
+            // Update Clock
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            clockElement.textContent = timeString;
+
+            // Update Countdown Timers
+            exams.forEach(exam => {
+                const timerElement = document.getElementById(`timer-${exam.code}`);
+                if (!timerElement) return;
+
+                const countdown = calculateCountdown(exam.date);
+                if (countdown) {
+                    timerElement.innerHTML = `
+                        <div class="flex justify-around">
+                            <div>${String(countdown.days).padStart(2, '0')}<span class="block text-xs font-normal">Days</span></div>
+                            <div>${String(countdown.hours).padStart(2, '0')}<span class="block text-xs font-normal">Hours</span></div>
+                            <div>${String(countdown.minutes).padStart(2, '0')}<span class="block text-xs font-normal">Mins</span></div>
+                            <div>${String(countdown.seconds).padStart(2, '0')}<span class="block text-xs font-normal">Secs</span></div>
+                        </div>
+                    `;
+                } else {
+                    timerElement.innerHTML = '<span class="text-2xl text-green-500">Exam Over! Good Luck!</span>';
+                    timerElement.classList.remove('countdown-glow');
+                }
+            });
+        }
+        
+        /**
+         * Toggles the theme between light and dark mode.
+         */
+        function toggleTheme() {
+            htmlEl.classList.toggle('dark');
+            const isDarkMode = htmlEl.classList.contains('dark');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateThemeIcons(isDarkMode);
+        }
+
+        /**
+         * Updates the visibility of theme icons.
+         * @param {boolean} isDarkMode - True if dark mode is active.
+         */
+        function updateThemeIcons(isDarkMode) {
+            if (isDarkMode) {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            } else {
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            }
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial theme from localStorage or system preference
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                htmlEl.classList.add('dark');
+                updateThemeIcons(true);
+            } else {
+                htmlEl.classList.remove('dark');
+                updateThemeIcons(false);
+            }
+
+            populateContent();
+            updateTimers();
+            setInterval(updateTimers, 1000);
+
+            themeToggle.addEventListener('click', toggleTheme);
         });
 
-        if (!sessionStorage.getItem('visit_counted')) {
-          sessionStorage.setItem('visit_counted', 'true');
-        }
-
-        visitorCountElement.textContent = newCount.toLocaleString();
-      } catch (error) {
-        console.error("Error managing visitor count:", error);
-        visitorCountElement.textContent = "N/A";
-      }
-    }
-
-    function init() {
-      yearElement.textContent = new Date().getFullYear();
-      exams.forEach((exam, index) => {
-        createCountdownCard(exam, index);
-        createTableRow(exam);
-      });
-      updateClock();
-      updateCountdowns();
-      setInterval(updateClock, 1000);
-      setInterval(updateCountdowns, 1000);
-      manageVisitorCount();
-    }
-
-    window.onload = init;
-  </script>
+    </script>
 </body>
 </html>
